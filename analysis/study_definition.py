@@ -7,15 +7,23 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
-    population=patients.registered_with_one_practice_between(
-        "2019-02-01", "2020-02-01"
+    population=patients.satisfying(
+        'has_follow_up AND (sex = "M" OR sex = "F")',
+        has_follow_up=patients.registered_with_one_practice_between(
+          "2019-02-01", "2020-02-01"
+        ),
     ),
-
     age=patients.age_as_of(
         "2019-09-01",
         return_expectations={
             "rate": "universal",
             "int": {"distribution": "population_ages"},
         },
+    ),
+    sex=patients.sex(
+        return_expectations={
+            "category": {"ratios": {1: 0.49, 2: 0.51}},
+            "incidence": 1,
+        }
     ),
 )
